@@ -3,9 +3,10 @@ import jwt from 'jsonwebtoken';
 
 import { User } from "../entity/User";
 
+
 export default async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const token = req.cookies.token;
+        const token: string = req.cookies.token;
         if(!token) return next();
 
         const { username }: any = jwt.verify(token, process.env.JWT_SECRET!);

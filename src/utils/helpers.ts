@@ -1,6 +1,6 @@
 export function makeId(length: number): string {
     let result = '';
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const characters: string = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     const charactersLength = characters.length;
 
     for ( var i = 0; i < length; i++ ) {
@@ -14,8 +14,8 @@ export function slugify(str: string): string {
     str = str.toLowerCase();
 
      // remove accents, swap ñ for n, etc
-    const from = "åàáãäâèéëêìíïîòóöôùúüûñç·/_,:;";
-    const to = "aaaaaaeeeeiiiioooouuuunc------";
+    const from: string = "åàáãäâèéëêìíïîòóöôùúüûñç·/_,:;";
+    const to: string = "aaaaaaeeeeiiiioooouuuunc------";
 
     for (let i = 0, l = from.length; i < l; i++) {
         str = str.replace(new RegExp(from.charAt(i), "g"), to.charAt(i));

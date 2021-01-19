@@ -32,6 +32,9 @@ export class Sub extends Entity {
     @JoinColumn({ name: 'username', referencedColumnName: 'username'})
     user: User;
 
+    @Column()
+    username: string;
+
     @OneToMany(() => Post, post => post.sub)
     posts: Post[];
 }
