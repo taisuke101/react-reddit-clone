@@ -1,6 +1,6 @@
 import { Request, Response, Router } from "express";
-import { Comment } from "../entity/Comment";
 
+import { Comment } from "../entity/Comment";
 import { Post } from "../entity/Post";
 import { Sub } from "../entity/Sub";
 import { User } from "../entity/User";
