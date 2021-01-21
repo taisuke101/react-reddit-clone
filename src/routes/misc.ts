@@ -1,7 +1,9 @@
 import { Request, Response, Router } from 'express';
+import { getConnection } from 'typeorm';
 
 import { Comment } from '../entity/Comment';
 import { Post } from '../entity/Post';
+import { Sub } from '../entity/Sub';
 import { User } from '../entity/User';
 import { Vote } from '../entity/Vote';
 
@@ -70,7 +72,37 @@ const vote = async (req: Request, res: Response) => {
     }
 }
 
+
+
+const topSubs = async (_: Request, res: Response) => {
+    try {
+    const concatUrl = `CONCAT('${process.env.APP_URL}/images/', s.imageUrn )`
+    const imageUrlExp = `COALESCE( ${concatUrl} , 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y')`
+    const subs = await getConnection()
+        .createQueryBuilder()
+        .select(
+            `s.title, 
+            s.name, 
+            ${imageUrlExp} as imageUrl, 
+            count(p.id) as postCount`
+        )
+        .from(Sub, 's')
+        .leftJoin(Post, 'p', 's.name = p.subName')
+        .groupBy('s.title, s.name, imageUrl')
+        .orderBy('postCount', 'DESC')
+        .limit(5)
+        .execute()     
+
+    return res.json(subs)
+    } catch (err) {
+        console.log(err);
+        return res.status(500).json({ error: 'エラーが発生しました！'})
+    }
+}
+
+
 const router = Router();
-router.post('/vote', user, auth, vote)
+router.post('/vote', user, auth, vote);
+router.get('/top-subs', topSubs);
 
 export default router;
