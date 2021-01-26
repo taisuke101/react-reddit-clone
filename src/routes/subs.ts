@@ -138,10 +138,29 @@ const uploadSubImage = async (req: Request, res: Response) => {
     
 }
 
+const searchSubs = async (req: Request, res: Response) => {
+    try {
+        const name = req.params.name;
+
+        if (isEmpty(name))
+        return res.status(400).json({ error: '検索名は必須項目です！'})
+
+        const subs = await getRepository(Sub)
+        .createQueryBuilder()
+        .where('LOWER(name) LIKE :name', { name: `%${name.toLowerCase().trim()}%`})
+        .getMany()
+
+        return res.json(subs);
+    } catch (err) {
+        return res.status(500).json({ error: 'エラーが発生しました！'});
+    }
+}
+
 const router = Router();
 
 router.post('/', user, auth, createSub);
 router.get('/:name', user, getSub);
 router.post('/:name/image', user, auth, ownSub, upload.single('file'), uploadSubImage);
+router.get('/search/:name', searchSubs);
 
 export default router;
