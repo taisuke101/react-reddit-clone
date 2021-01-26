@@ -1,3 +1,4 @@
+import { Expose } from 'class-transformer';
 import { BeforeInsert, Column, Entity as TOEntity, Index, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 import { makeId } from '../utils/helpers';
 
@@ -32,6 +33,11 @@ export class Comment extends Entity {
 
     @OneToMany(() => Vote, vote => vote.comment)
     votes: Vote[];
+
+    // 合計の投票数を数える関数
+    @Expose() get voteScore(): number {
+        return this.votes?.reduce((prev, curr) => prev + (curr.value || 0), 0)
+    }
 
     protected userVote : number;
     setUserVote(user: User) {
